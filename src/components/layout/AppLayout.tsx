@@ -23,7 +23,7 @@ const AppLayout = () => {
         <Outlet />
       </main>
 
-      {/* Bottom Nav */}
+      {/* Bottom Nav - hidden on chat page (has its own) */}
       {!isChat && <BottomNav />}
     </div>
   );
