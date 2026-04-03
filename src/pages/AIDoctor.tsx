@@ -201,7 +201,26 @@ const AIDoctor = () => {
       </div>
 
       {/* Bottom Nav for chat page */}
-      <BottomNav />
+      <nav className="border-t border-border bg-card">
+        <div className="flex items-center justify-around max-w-lg mx-auto">
+          {[
+            { to: "/", label: "Dashboard" },
+            { to: "/calculator", label: "Calculator" },
+            { to: "/hospitals", label: "Hospitals" },
+            { to: "/ai-doctor", label: "AI Doctor" },
+          ].map(({ to, label }) => (
+            <a
+              key={to}
+              href={to}
+              className={`flex flex-col items-center gap-0.5 py-2 px-3 text-xs transition-colors ${
+                to === "/ai-doctor" ? "text-primary font-semibold" : "text-muted-foreground"
+              }`}
+            >
+              <span>{label}</span>
+            </a>
+          ))}
+        </div>
+      </nav>
     </div>
   );
 };
