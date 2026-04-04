@@ -14,7 +14,200 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      chat_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      health_records: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          record_type: string
+          recorded_at: string
+          unit: string | null
+          updated_at: string
+          user_id: string
+          value: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          record_type: string
+          recorded_at?: string
+          unit?: string | null
+          updated_at?: string
+          user_id: string
+          value: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          record_type?: string
+          recorded_at?: string
+          unit?: string | null
+          updated_at?: string
+          user_id?: string
+          value?: number
+        }
+        Relationships: []
+      }
+      hospital_services: {
+        Row: {
+          created_at: string
+          description: string | null
+          hospital_id: string
+          id: string
+          is_available: boolean | null
+          price: number | null
+          service_name: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          hospital_id: string
+          id?: string
+          is_available?: boolean | null
+          price?: number | null
+          service_name: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          hospital_id?: string
+          id?: string
+          is_available?: boolean | null
+          price?: number | null
+          service_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hospital_services_hospital_id_fkey"
+            columns: ["hospital_id"]
+            isOneToOne: false
+            referencedRelation: "hospitals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hospitals: {
+        Row: {
+          address: string
+          city: string
+          close_time: string | null
+          created_at: string
+          email: string | null
+          has_emergency: boolean | null
+          id: string
+          image_url: string | null
+          latitude: number | null
+          longitude: number | null
+          name: string
+          open_time: string | null
+          phone: string | null
+          rating: number | null
+        }
+        Insert: {
+          address: string
+          city?: string
+          close_time?: string | null
+          created_at?: string
+          email?: string | null
+          has_emergency?: boolean | null
+          id?: string
+          image_url?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          name: string
+          open_time?: string | null
+          phone?: string | null
+          rating?: number | null
+        }
+        Update: {
+          address?: string
+          city?: string
+          close_time?: string | null
+          created_at?: string
+          email?: string | null
+          has_emergency?: boolean | null
+          id?: string
+          image_url?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          name?: string
+          open_time?: string | null
+          phone?: string | null
+          rating?: number | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          blood_group: string | null
+          created_at: string
+          date_of_birth: string | null
+          display_name: string | null
+          gender: string | null
+          height_cm: number | null
+          id: string
+          updated_at: string
+          user_id: string
+          weight_kg: number | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          blood_group?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          display_name?: string | null
+          gender?: string | null
+          height_cm?: number | null
+          id?: string
+          updated_at?: string
+          user_id: string
+          weight_kg?: number | null
+        }
+        Update: {
+          avatar_url?: string | null
+          blood_group?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          display_name?: string | null
+          gender?: string | null
+          height_cm?: number | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+          weight_kg?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
