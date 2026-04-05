@@ -10,6 +10,7 @@ import HealthCalculator from "./pages/HealthCalculator";
 import Exercise from "./pages/Exercise";
 import Hospitals from "./pages/Hospitals";
 import AIChat from "./pages/AIChat";
+import Profile from "./pages/Profile";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -36,6 +37,7 @@ function ProtectedRoutes() {
         <Route path="/exercise" element={<Exercise />} />
         <Route path="/hospitals" element={<Hospitals />} />
         <Route path="/chat" element={<AIChat />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AppShell>
