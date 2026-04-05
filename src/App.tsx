@@ -10,6 +10,7 @@ import HealthCalculator from "./pages/HealthCalculator";
 import Exercise from "./pages/Exercise";
 import Hospitals from "./pages/Hospitals";
 import AIChat from "./pages/AIChat";
+import Profile from "./pages/Profile";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 

@@ -1,6 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { Activity, Calculator, Dumbbell, Building2, MessageCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Activity, Calculator, Dumbbell, Building2, MessageCircle, User } from "lucide-react";
 
 const tabs = [
   { path: "/", label: "Dashboard", icon: Activity },
@@ -8,6 +7,7 @@ const tabs = [
   { path: "/exercise", label: "Exercise", icon: Dumbbell },
   { path: "/hospitals", label: "Hospitals", icon: Building2 },
   { path: "/chat", label: "AI Chat", icon: MessageCircle },
+  { path: "/profile", label: "Profile", icon: User },
 ];
 
 export function BottomNav() {
