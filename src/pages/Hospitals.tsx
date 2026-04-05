@@ -1,18 +1,20 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Building2, Star, Clock, Phone, Search, Filter, ChevronDown, ChevronUp, IndianRupee } from "lucide-react";
+import { Building2, Star, Clock, Phone, Search, ChevronDown, ChevronUp, IndianRupee, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const serviceFilters = ["All", "X-Ray", "Blood Test", "MRI", "CT Scan", "Ultrasound", "ECG", "Surgery", "Cardiology", "Dental"];
 
 export default function Hospitals() {
   const [search, setSearch] = useState("");
   const [serviceFilter, setServiceFilter] = useState("All");
+  const [cityFilter, setCityFilter] = useState("All");
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const { data: hospitals, isLoading } = useQuery({
@@ -26,12 +28,18 @@ export default function Hospitals() {
     },
   });
 
+  // Extract unique cities
+  const cities = hospitals
+    ? ["All", ...Array.from(new Set(hospitals.map((h) => h.city))).sort()]
+    : ["All"];
+
   const filtered = hospitals?.filter((h) => {
     const matchesSearch = h.name.toLowerCase().includes(search.toLowerCase()) ||
       h.address.toLowerCase().includes(search.toLowerCase());
     const matchesService = serviceFilter === "All" ||
       h.hospital_services?.some((s: any) => s.service_name === serviceFilter);
-    return matchesSearch && matchesService;
+    const matchesCity = cityFilter === "All" || h.city === cityFilter;
+    return matchesSearch && matchesService && matchesCity;
   });
 
   return (
@@ -45,6 +53,23 @@ export default function Hospitals() {
       <div className="relative mb-3">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input className="pl-9" placeholder="Search hospitals..." value={search} onChange={(e) => setSearch(e.target.value)} />
+      </div>
+
+      {/* City Filter */}
+      <div className="mb-3">
+        <Select value={cityFilter} onValueChange={setCityFilter}>
+          <SelectTrigger className="w-full">
+            <MapPin className="h-4 w-4 mr-2 text-muted-foreground" />
+            <SelectValue placeholder="Select City" />
+          </SelectTrigger>
+          <SelectContent>
+            {cities.map((city) => (
+              <SelectItem key={city} value={city}>
+                {city === "All" ? "All Cities" : city}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Service Filter */}
@@ -64,6 +89,8 @@ export default function Hospitals() {
       {/* Hospital List */}
       {isLoading ? (
         <div className="text-center py-10 text-muted-foreground">Loading hospitals...</div>
+      ) : filtered?.length === 0 ? (
+        <div className="text-center py-10 text-muted-foreground">No hospitals found for the selected filters.</div>
       ) : (
         <div className="space-y-3">
           <AnimatePresence>
@@ -79,7 +106,10 @@ export default function Hospitals() {
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <h3 className="font-bold text-sm">{hospital.name}</h3>
-                        <p className="text-xs text-muted-foreground mt-0.5">{hospital.address}, {hospital.city}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
+                          <MapPin className="h-3 w-3 shrink-0" />
+                          {hospital.address}, {hospital.city}
+                        </p>
                         <div className="flex items-center gap-3 mt-2">
                           <div className="flex items-center gap-1">
                             <Star className="h-3 w-3 text-health-orange fill-health-orange" />
