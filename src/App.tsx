@@ -37,6 +37,7 @@ function ProtectedRoutes() {
         <Route path="/exercise" element={<Exercise />} />
         <Route path="/hospitals" element={<Hospitals />} />
         <Route path="/chat" element={<AIChat />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AppShell>

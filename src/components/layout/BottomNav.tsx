@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Activity, Calculator, Dumbbell, Building2, MessageCircle, User } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const tabs = [
   { path: "/", label: "Dashboard", icon: Activity },
