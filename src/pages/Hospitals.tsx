@@ -28,7 +28,6 @@ export default function Hospitals() {
     },
   });
 
-  // Extract unique cities
   const cities = hospitals
     ? ["All", ...Array.from(new Set(hospitals.map((h) => h.city))).sort()]
     : ["All"];
@@ -43,20 +42,18 @@ export default function Hospitals() {
   });
 
   return (
-    <div className="p-4 max-w-lg mx-auto">
+    <div className="p-4 max-w-4xl mx-auto">
       <div className="flex items-center gap-2 mb-4">
         <Building2 className="h-6 w-6 text-primary" />
         <h1 className="text-2xl font-bold">Hospitals</h1>
       </div>
 
-      {/* Search */}
-      <div className="relative mb-3">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input className="pl-9" placeholder="Search hospitals..." value={search} onChange={(e) => setSearch(e.target.value)} />
-      </div>
-
-      {/* City Filter */}
-      <div className="mb-3">
+      {/* Filters */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input className="pl-9" placeholder="Search hospitals..." value={search} onChange={(e) => setSearch(e.target.value)} />
+        </div>
         <Select value={cityFilter} onValueChange={setCityFilter}>
           <SelectTrigger className="w-full">
             <MapPin className="h-4 w-4 mr-2 text-muted-foreground" />
@@ -92,16 +89,16 @@ export default function Hospitals() {
       ) : filtered?.length === 0 ? (
         <div className="text-center py-10 text-muted-foreground">No hospitals found for the selected filters.</div>
       ) : (
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <AnimatePresence>
             {filtered?.map((hospital, i) => (
               <motion.div
                 key={hospital.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
+                transition={{ delay: i * 0.03 }}
               >
-                <Card className="overflow-hidden">
+                <Card className="overflow-hidden h-full">
                   <CardContent className="p-4">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
@@ -110,7 +107,7 @@ export default function Hospitals() {
                           <MapPin className="h-3 w-3 shrink-0" />
                           {hospital.address}, {hospital.city}
                         </p>
-                        <div className="flex items-center gap-3 mt-2">
+                        <div className="flex items-center gap-3 mt-2 flex-wrap">
                           <div className="flex items-center gap-1">
                             <Star className="h-3 w-3 text-health-orange fill-health-orange" />
                             <span className="text-xs font-semibold">{hospital.rating}</span>

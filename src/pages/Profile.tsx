@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/components/ThemeProvider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { User, Save, LogOut, Loader2, Heart, Ruler, Weight, Calendar, Droplets } from "lucide-react";
+import { User, Save, LogOut, Loader2, Heart, Ruler, Weight, Calendar, Droplets, Sun, Moon } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
@@ -15,6 +17,7 @@ const genders = ["Male", "Female", "Other"];
 
 export default function Profile() {
   const { user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [profile, setProfile] = useState({
@@ -94,14 +97,30 @@ export default function Profile() {
   }
 
   return (
-    <div className="p-4 max-w-lg mx-auto pb-24">
+    <div className="p-4 max-w-2xl mx-auto pb-24">
       <div className="flex items-center gap-2 mb-4">
         <User className="h-6 w-6 text-primary" />
         <h1 className="text-2xl font-bold">My Profile</h1>
       </div>
 
-      {/* Avatar & Email */}
+      {/* Theme Toggle */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+        <Card className="mb-4">
+          <CardContent className="p-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {theme === "dark" ? <Moon className="h-5 w-5 text-health-purple" /> : <Sun className="h-5 w-5 text-health-orange" />}
+              <div>
+                <p className="font-semibold text-sm">Dark Mode</p>
+                <p className="text-xs text-muted-foreground">{theme === "dark" ? "Dark theme active" : "Light theme active"}</p>
+              </div>
+            </div>
+            <Switch checked={theme === "dark"} onCheckedChange={toggleTheme} />
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Avatar & Email */}
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
         <Card className="mb-4">
           <CardContent className="p-4 flex items-center gap-4">
             <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center">
@@ -122,26 +141,42 @@ export default function Profile() {
             <CardTitle className="text-base">Personal Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-1.5">
-              <Label className="text-xs flex items-center gap-1"><User className="h-3 w-3" /> Display Name</Label>
-              <Input value={profile.display_name} onChange={(e) => setProfile({ ...profile, display_name: e.target.value })} placeholder="Your name" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label className="text-xs flex items-center gap-1"><User className="h-3 w-3" /> Display Name</Label>
+                <Input value={profile.display_name} onChange={(e) => setProfile({ ...profile, display_name: e.target.value })} placeholder="Your name" />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs flex items-center gap-1"><Calendar className="h-3 w-3" /> Date of Birth</Label>
+                <Input type="date" value={profile.date_of_birth} onChange={(e) => setProfile({ ...profile, date_of_birth: e.target.value })} />
+              </div>
             </div>
 
-            <div className="space-y-1.5">
-              <Label className="text-xs flex items-center gap-1"><Calendar className="h-3 w-3" /> Date of Birth</Label>
-              <Input type="date" value={profile.date_of_birth} onChange={(e) => setProfile({ ...profile, date_of_birth: e.target.value })} />
-            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label className="text-xs flex items-center gap-1"><Heart className="h-3 w-3" /> Gender</Label>
+                <Select value={profile.gender} onValueChange={(v) => setProfile({ ...profile, gender: v })}>
+                  <SelectTrigger><SelectValue placeholder="Select gender" /></SelectTrigger>
+                  <SelectContent>
+                    {genders.map((g) => (
+                      <SelectItem key={g} value={g}>{g}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-            <div className="space-y-1.5">
-              <Label className="text-xs flex items-center gap-1"><Heart className="h-3 w-3" /> Gender</Label>
-              <Select value={profile.gender} onValueChange={(v) => setProfile({ ...profile, gender: v })}>
-                <SelectTrigger><SelectValue placeholder="Select gender" /></SelectTrigger>
-                <SelectContent>
-                  {genders.map((g) => (
-                    <SelectItem key={g} value={g}>{g}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="space-y-1.5">
+                <Label className="text-xs flex items-center gap-1"><Droplets className="h-3 w-3" /> Blood Group</Label>
+                <Select value={profile.blood_group} onValueChange={(v) => setProfile({ ...profile, blood_group: v })}>
+                  <SelectTrigger><SelectValue placeholder="Select blood group" /></SelectTrigger>
+                  <SelectContent>
+                    {bloodGroups.map((b) => (
+                      <SelectItem key={b} value={b}>{b}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
@@ -153,18 +188,6 @@ export default function Profile() {
                 <Label className="text-xs flex items-center gap-1"><Weight className="h-3 w-3" /> Weight (kg)</Label>
                 <Input type="number" value={profile.weight_kg} onChange={(e) => setProfile({ ...profile, weight_kg: e.target.value })} placeholder="70" />
               </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <Label className="text-xs flex items-center gap-1"><Droplets className="h-3 w-3" /> Blood Group</Label>
-              <Select value={profile.blood_group} onValueChange={(v) => setProfile({ ...profile, blood_group: v })}>
-                <SelectTrigger><SelectValue placeholder="Select blood group" /></SelectTrigger>
-                <SelectContent>
-                  {bloodGroups.map((b) => (
-                    <SelectItem key={b} value={b}>{b}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
             </div>
 
             <Button onClick={handleSave} disabled={saving} className="w-full">
